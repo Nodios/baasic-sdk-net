@@ -646,7 +646,10 @@ namespace Baasic.Client.Core
             }
             if (response.Content != null && response.Content.Headers.ContentLength > 0)
             {
-                return JsonFormatter.Deserialize<T>(await response.Content.ReadAsStreamAsync());
+                var d = await response.Content.ReadAsStringAsync();
+                return JsonFormatter.Deserialize<T>(d);
+
+                //return JsonFormatter.Deserialize<T>(await response.Content.ReadAsStreamAsync());
             }
             else
             {

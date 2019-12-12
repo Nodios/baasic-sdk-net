@@ -113,5 +113,14 @@ namespace Baasic.Client.Modules.DynamicResource
         Task<T> UpdateAsync(string schemaName, T resource);
 
         #endregion Methods
+
+        #region ACL
+
+        Task<IEnumerable<ACLPolicy>> GetACLAsync(DynamicACLOptions options);
+        Task<IEnumerable<ACLPolicy>> UpdateACLAsync(DynamicACLOptions options);
+        Task RemoveACLForUser(SGuid resourceId, string action, string user);
+        Task RemoveACLForRole(SGuid resourceId, string action, string role);
+
+        #endregion ACL
     }
 }

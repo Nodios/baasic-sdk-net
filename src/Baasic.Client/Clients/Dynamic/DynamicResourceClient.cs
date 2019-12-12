@@ -2,8 +2,11 @@
 using Baasic.Client.Common.Configuration;
 using Baasic.Client.Core;
 using Baasic.Client.Model;
+using Baasic.Client.Model.ACL;
+using Baasic.Client.Model.Dynamic;
 using Baasic.Client.Utility;
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -120,6 +123,7 @@ namespace Baasic.Client.Modules.DynamicResource
             }
         }
 
+
         /// <summary>
         /// Asynchronously gets the <see cref="T" /> by provided key.
         /// </summary>
@@ -217,6 +221,7 @@ namespace Baasic.Client.Modules.DynamicResource
             }
         }
 
+
         /// <summary>
         /// Asynchronously update the <see cref="T" /> in the system.
         /// </summary>
@@ -242,5 +247,36 @@ namespace Baasic.Client.Modules.DynamicResource
         }
 
         #endregion Methods
+
+        #region ACL
+
+        public Task<IEnumerable<ACLPolicy>> GetACLAsync(DynamicACLOptions options)
+        {
+            using(IBaasicClient client = BaasicClientFactory.Create(Configuration))
+            {
+                return client.GetAsync<IEnumerable<ACLPolicy>>(client.GetApiUrl("{0}/{1}/{2}/acl", ModuleRelativePath, options.SchemaName, options.Id));
+            }
+        }
+
+        public Task<IEnumerable<ACLPolicy>> UpdateACLAsync(DynamicACLOptions options)
+        {
+            using(IBaasicClient client = BaasicClientFactory.Create(Configuration))
+            {
+                return client.PutAsync<IEnumerable<ACLBase>, IEnumerable<ACLPolicy>>(client.GetApiUrl("{0}/{1}/{2}/acl", ModuleRelativePath, options.SchemaName, options.Id), options.ACL);
+            }
+        }
+
+        public Task RemoveACLForRole(string schema, SGuid resourceId, string action, string role)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task RemoveACLForUser(string schema, SGuid resourceId, string action, string user)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        #endregion ACL
     }
 }
