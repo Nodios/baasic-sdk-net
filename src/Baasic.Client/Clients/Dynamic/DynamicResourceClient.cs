@@ -59,13 +59,24 @@ namespace Baasic.Client.Modules.DynamicResource
         /// </summary>
         /// <param name="id">The identifier.</param>
         /// <returns>True if dynamic resource is deleted, false otherwise.</returns>
-        public virtual async Task<bool> DeleteAsync(SGuid id)
+        public virtual Task<bool> DeleteAsync(SGuid id)
+        {
+            return DeleteAsync(typeof(T).Name, id);
+        }
+
+        /// <summary>
+        /// Asynchronously deletes the dynamic resource of <see cref="T" /> from the system.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <param name="schemaName">The schema name.</param>
+        /// <returns>True if dynamic resource is deleted, false otherwise.</returns>
+        public virtual async Task<bool> DeleteAsync(string schemaName, SGuid id)
         {
             try
             {
                 using (IBaasicClient client = BaasicClientFactory.Create(Configuration))
                 {
-                    return await client.DeleteAsync(client.GetApiUrl(String.Format("{0}/{1}/{{0}}", ModuleRelativePath, typeof(T).Name), id));
+                    return await client.DeleteAsync(client.GetApiUrl(String.Format("{0}/{1}/{{0}}", ModuleRelativePath, schemaName), id));
                 }
             }
             catch (BaasicClientException ex)
@@ -252,7 +263,7 @@ namespace Baasic.Client.Modules.DynamicResource
 
         public Task<IEnumerable<ACLPolicy>> GetACLAsync(DynamicACLOptions options)
         {
-            using(IBaasicClient client = BaasicClientFactory.Create(Configuration))
+            using (IBaasicClient client = BaasicClientFactory.Create(Configuration))
             {
                 return client.GetAsync<IEnumerable<ACLPolicy>>(client.GetApiUrl("{0}/{1}/{2}/acl", ModuleRelativePath, options.SchemaName, options.Id));
             }
@@ -260,7 +271,7 @@ namespace Baasic.Client.Modules.DynamicResource
 
         public Task<IEnumerable<ACLPolicy>> UpdateACLAsync(DynamicACLOptions options)
         {
-            using(IBaasicClient client = BaasicClientFactory.Create(Configuration))
+            using (IBaasicClient client = BaasicClientFactory.Create(Configuration))
             {
                 return client.PutAsync<IEnumerable<ACLBase>, IEnumerable<ACLPolicy>>(client.GetApiUrl("{0}/{1}/{2}/acl", ModuleRelativePath, options.SchemaName, options.Id), options.ACL);
             }
@@ -268,12 +279,18 @@ namespace Baasic.Client.Modules.DynamicResource
 
         public Task RemoveACLForRole(string schema, SGuid resourceId, string action, string role)
         {
-            throw new NotImplementedException();
+            using (IBaasicClient client = BaasicClientFactory.Create(Configuration))
+            {
+                return client.DeleteAsync(client.GetApiUrl("{0}/{1}/{2}/acl/actions/{3}/roles/{4}", ModuleRelativePath, schema, resourceId, action, role));
+            }
         }
 
         public Task RemoveACLForUser(string schema, SGuid resourceId, string action, string user)
         {
-            throw new NotImplementedException();
+            using (IBaasicClient client = BaasicClientFactory.Create(Configuration))
+            {
+                return client.DeleteAsync(client.GetApiUrl("{0}/{1}/{2}/acl/actions/{3}/users/{4}", ModuleRelativePath, schema, resourceId, action, user));
+            }
         }
 
 

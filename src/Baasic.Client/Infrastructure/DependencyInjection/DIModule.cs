@@ -1,5 +1,6 @@
 using Baasic.Client.Clients.Blogs;
 using Baasic.Client.Clients.CMS;
+using Baasic.Client.Clients.Lookups;
 using Baasic.Client.Clients.MediaVault;
 using Baasic.Client.Clients.Profile;
 using Baasic.Client.Common.Infrastructure.DependencyInjection;
@@ -52,6 +53,8 @@ namespace Baasic.Client.Infrastructure.DependencyInjection
             dependencyResolver.Register<IArticleCommentRepliesClient, ArticleCommentRepliesClient>();
             dependencyResolver.Register<IArticleTagClient, ArticleTagClient>();
             dependencyResolver.Register(typeof(IDynamicResourceClient<>), typeof(DynamicResourceClient<>));
+
+            dependencyResolver.Register<ILookupClient, LookupClient>();
 
             dependencyResolver.Register<IRoleClient, RoleClient>();
             dependencyResolver.Register<IUserClient, UserClient>();

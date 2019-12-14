@@ -1,6 +1,9 @@
 ﻿using Baasic.Client.Common;
 using Baasic.Client.Core;
 using Baasic.Client.Model;
+using Baasic.Client.Model.ACL;
+using Baasic.Client.Model.Dynamic;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Baasic.Client.Modules.DynamicResource
@@ -18,6 +21,14 @@ namespace Baasic.Client.Modules.DynamicResource
         /// <param name="id">The identifier.</param>
         /// <returns>True if dynamic resource is deleted, false otherwise.</returns>
         Task<bool> DeleteAsync(SGuid id);
+
+        /// <summary>
+        /// Asynchronously deletes the dynamic resource of <see cref="T" /> from the system.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <param name="schemaName">The schema name.</param>
+        /// <returns>True if dynamic resource is deleted, false otherwise.</returns>
+        Task<bool> DeleteAsync(string schemaName, SGuid id);
 
         /// <summary>
         /// Asynchronously find <see cref="T" /> s.
@@ -118,8 +129,8 @@ namespace Baasic.Client.Modules.DynamicResource
 
         Task<IEnumerable<ACLPolicy>> GetACLAsync(DynamicACLOptions options);
         Task<IEnumerable<ACLPolicy>> UpdateACLAsync(DynamicACLOptions options);
-        Task RemoveACLForUser(SGuid resourceId, string action, string user);
-        Task RemoveACLForRole(SGuid resourceId, string action, string role);
+        Task RemoveACLForUser(string schema, SGuid resourceId, string action, string user);
+        Task RemoveACLForRole(string schema, SGuid resourceId, string action, string role);
 
         #endregion ACL
     }
